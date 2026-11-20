@@ -100,17 +100,16 @@ def eye_defs():
                      f'clip-path="url(#sc_{name})" transform="translate(0,3)"/>')
             ix, iy = e["iris"]
             g.append(f'<g clip-path="url(#sc_{name})">'
-                     f'<ellipse cx="{ix}" cy="{iy}" rx="7.6" ry="9.2" fill="url(#iris)" '
+                     f'<ellipse cx="{ix}" cy="{iy}" rx="6.6" ry="8.2" fill="url(#iris)" '
                      f'stroke="#26252b" stroke-width="0.9"/>'
-                     f'<ellipse cx="{ix}" cy="{iy + 1}" rx="3.6" ry="4.6" fill="#1f1e24"/>'
+                     f'<ellipse cx="{ix}" cy="{iy + 1}" rx="3.0" ry="4.0" fill="#1f1e24"/>'
                      f'<path d="M {ix - 5.5} {iy + 5} Q {ix} {iy + 8.5} {ix + 5.5} {iy + 5}" '
                      f'fill="none" stroke="#a9adb6" stroke-width="1.6" opacity="0.8"/>'
                      f'</g>')
         g.append(ln(e["crease"], 0.9, LINE, 0.55))
-        g.append(ln(e["lid"], 2.5, "#29211f"))
+        g.append(ln(e["lid"], 2.1, "#29211f"))
         # small lash flick at the outer corner
         x0, y0 = [float(v) for v in e["lid"].split()[1:3]]
-        g.append(ln(f"M {x0} {y0} L {x0 - 3} {y0 + 2.6}", 1.6, "#29211f"))
         g.append(ln(e["lower"], 0.9, LINE, 0.6))
         out.append(f'<g id="eye_{name}">{"".join(g)}</g>')
     return "".join(out)
@@ -118,37 +117,37 @@ def eye_defs():
 
 def eye_pair(left, right=None):
     right = right or left
-    s = (f'<use href="#eye_{left}" transform="translate(-20,68)"/>'
-         f'<use href="#eye_{right}" transform="translate(20,68) scale(-1,1)"/>')
+    s = (f'<use href="#eye_{left}" transform="translate(-20,68) scale(0.95,0.78)"/>'
+         f'<use href="#eye_{right}" transform="translate(20,68) scale(-0.95,0.78)"/>')
     # highlights are not mirrored: light comes from the same side
     for cx, name, mir in ((-20, left, 1), (20, right, -1)):
         e = EYES[name]
         if e["hl"]:
             ix, iy = e["iris"]
             ix *= mir
-            s += (f'<circle cx="{cx + ix - 3}" cy="{68 + iy - 3.2}" r="2.5" fill="#fff"/>'
-                  f'<circle cx="{cx + ix + 3}" cy="{68 + iy + 4}" r="1.1" fill="#fff" opacity="0.9"/>')
+            s += (f'<circle cx="{cx + ix - 2.6}" cy="{68 + iy * 0.78 - 2.4}" r="1.9" fill="#fff"/>'
+                  f'<circle cx="{cx + ix + 2.4}" cy="{68 + iy * 0.78 + 3}" r="0.9" fill="#fff" opacity="0.9"/>')
     return s
 
 
 # ================================================================ HEAD (front)
-FACE = ("M -43 38 C -44 66 -38 86 -24 100 Q -10 110 0 113 Q 10 110 24 100 "
-        "C 38 86 44 66 43 38 C 40 0 -40 0 -43 38 Z")
-BACK_HAIR = ("M -51 76 C -62 20 -42 -21 0 -21 C 42 -21 62 20 51 76 Q 49 86 45 96 L 40 84 "
-             "L 35 99 L 30 86 L -30 86 L -35 99 L -40 84 L -45 96 Q -49 86 -51 76 Z")
-FRINGE = ("M -55 44 C -60 12 -38 -19 2 -19 C 43 -19 61 12 55 44 "
-          "Q 62 53 55 60 Q 58 72 50 78 Q 50 90 45 101 Q 44 80 38 61 Q 36 52 34 45 Q 31 54 28 61 "
+FACE = ("M -43 38 C -44 60 -41 76 -34 88 L -13 108 Q 0 114 13 108 L 34 88 "
+        "C 41 76 44 60 43 38 C 40 0 -40 0 -43 38 Z")
+BACK_HAIR = ("M -50 68 C -60 18 -42 -21 0 -21 C 42 -21 60 18 50 68 L 46 82 L 41 74 "
+             "L 37 90 L 31 82 L -31 82 L -37 90 L -41 74 L -46 82 Z")
+FRINGE = ("M -52 44 C -58 10 -38 -19 2 -19 C 43 -19 59 10 52 44 "
+          "Q 57 52 50 57 Q 50 68 47 77 Q 43 66 38 61 Q 36 52 34 45 Q 31 54 28 61 "
           "Q 26 46 21 35 Q 18 48 13 58 Q 12 44 8 33 Q 4 46 -1 56 "
           "Q -2 42 -6 33 Q -10 46 -16 59 Q -16 44 -20 35 Q -24 49 -30 61 "
-          "Q -32 51 -35 45 Q -38 54 -39 62 Q -44 80 -45 101 Q -50 90 -50 78 "
-          "Q -58 72 -55 60 Q -62 53 -55 44 Z")
+          "Q -32 51 -35 45 Q -38 54 -39 62 Q -43 66 -47 77 Q -50 68 -50 57 "
+          "Q -57 52 -52 44 Z")
 FRINGE_TUFTS = ["M -10 -17 Q -6 -30 6 -29 Q 0 -24 2 -18 Z",
                 "M 8 -18 Q 18 -27 28 -22 Q 20 -21 18 -15 Z",
                 "M -36 -6 Q -46 -12 -52 -6 Q -46 -4 -42 2 Z"]
 FRINGE_STRANDS = [
     "M 4 -14 Q -2 10 -1 50", "M 4 -14 Q 12 10 13 52", "M -4 -10 Q -14 14 -16 52",
-    "M 12 -10 Q 24 10 28 56", "M -14 -6 Q -26 18 -30 56", "M 22 -6 Q 38 20 40 70",
-    "M -24 -2 Q -40 24 -42 88", "M 30 0 Q 48 30 46 96",
+    "M 12 -10 Q 24 10 28 56", "M -14 -6 Q -26 18 -30 56", "M 22 -6 Q 38 20 40 66",
+    "M -24 -2 Q -40 24 -44 74", "M 30 0 Q 48 30 46 74",
 ]
 FRINGE_HI = [
     "M -30 4 Q -16 -6 -2 -6", "M 6 -7 Q 20 -6 32 4",
@@ -156,16 +155,16 @@ FRINGE_HI = [
 ]
 
 BROWS = {  # left brow (viewer's left); right is mirrored
-    "calm":    "M -33 50 Q -22 45.5 -9 48",
-    "up":      "M -33 47 Q -22 41 -9 44.5",
-    "worried": "M -33 51 Q -22 47.5 -10 42.5",
-    "wince":   "M -33 46.5 Q -22 47 -10 52",
-    "sad":     "M -33 52 Q -22 49 -10 45",
-    "smile":   "M -33 49 Q -22 43.5 -9 47",
+    "calm":    "M -34 54 Q -22 51 -9 53",
+    "up":      "M -34 51 Q -22 47 -9 49.5",
+    "worried": "M -34 55 Q -22 53 -10 48",
+    "wince":   "M -34 51 Q -22 52 -10 57",
+    "sad":     "M -34 56 Q -22 54 -10 50",
+    "smile":   "M -34 53 Q -22 49.5 -9 52",
 }
 
 MOUTHS = {
-    "calm": ln("M -6 96.5 Q 0 97.6 6 96.5", 1.3),
+    "calm": ln("M -7 97 L 7 97", 1.3),
     "up": f'<ellipse cx="1" cy="97" rx="2.6" ry="1.8" fill="{LIP}" stroke="{LINE}" stroke-width="0.9"/>',
     "worried": ln("M -6 97.5 Q -3 95.6 0 96.6 Q 3 97.6 6 96", 1.3),
     "wince": (f'<path d="M -8 96 Q 0 93.5 8 97 Q 1 99 -8 96 Z" fill="#fff" stroke="{LINE}" '
@@ -212,20 +211,20 @@ def head_front(expr="calm", eyes=None, extras=""):
     g.append(f'<g clip-path="url(#faceClip)">'
              f'<path d="M -46 30 L 46 30 L 46 52 Q 36 66 30 60 Q 24 70 16 62 Q 8 70 0 62 '
              f'Q -8 70 -16 62 Q -24 70 -30 60 Q -38 66 -46 52 Z" fill="{SKIN_SH}"/>'
-             f'<path d="M -43 70 Q -40 86 -24 100 Q -34 84 -38 66 Z" fill="{SKIN_SH}" opacity="0.7"/>'
+             f'<path d="M -43 66 Q -40 80 -34 88 L -18 104 L -36 82 Z" fill="{SKIN_SH}" opacity="0.7"/>'
              f'</g>')
     g.append(eye_pair(*eyes))
     # nose + mouth
     g.append(ln("M 1.5 80 Q 4 85 1 87.5", 1.1, LINE, 0.75))
     g.append(MOUTHS[expr])
-    if expr in ("smile", "worried", "calm"):
-        op = {"smile": 0.55, "worried": 0.3, "calm": 0.22}[expr]
+    if expr == "smile":
+        op = 0.22
         for cx in (-27, 27):
             g.append(f'<ellipse cx="{cx}" cy="84" rx="8" ry="3.6" fill="{BLUSH}" opacity="{op}"/>')
     if expr == "sad":
         g.append(ln("M -28 81 Q -21 83.5 -13 81", 0.8, LINE_SOFT, 0.7))
         g.append(ln("M 28 81 Q 21 83.5 13 81", 0.8, LINE_SOFT, 0.7))
-    brows = ln(brow, 1.7, "#2a2326") + ln(mirror_path(brow), 1.7, "#2a2326")
+    brows = ln(brow, 2.8, "#2a2326") + ln(mirror_path(brow), 2.8, "#2a2326")
     g.append(brows)
     for d in FRINGE_TUFTS:
         g.append(p(d, HAIR, 1.3, HAIR_LINE))
@@ -247,33 +246,31 @@ def head_front(expr="calm", eyes=None, extras=""):
 def head_side():
     face = ("M -30 30 C -30 0 30 -6 34 30 C 35 42 36 48 35 52 C 36 60 40 70 43 77 "
             "Q 44 80 40 82 L 37 83 Q 37 86 38 88 Q 36 90 35.5 91 Q 37 93 36 96 "
-            "Q 34 99 33 100 Q 34 106 30 109 Q 18 112 4 102 L -10 90 C -24 80 -32 60 -30 30 Z")
+            "Q 34 99 33 100 Q 35 108 29 110 L 6 103 L -10 90 C -24 80 -32 60 -30 30 Z")
     hair = ("M -41 76 C -56 30 -32 -22 10 -19 C 40 -16 50 18 45 50 "
             "Q 41 47 38 59 Q 35 47 30 40 Q 28 50 24 57 Q 22 45 16 38 "
-            "Q 14 52 12 62 Q 10 76 9 92 Q 4 76 2 58 "
-            "C -6 52 -13 56 -14 64 Q -15 80 -19 96 Q -23 88 -27 103 "
-            "Q -32 90 -38 98 Q -39 86 -41 76 Z")
+            "Q 14 52 12 62 Q 11 70 10 80 Q 5 72 2 58 "
+            "C -6 52 -13 56 -14 64 Q -15 76 -18 88 Q -22 82 -26 94 "
+            "Q -31 84 -37 90 Q -39 82 -41 76 Z")
     tufts = ["M -4 -18 Q 4 -30 14 -27 Q 8 -23 10 -17 Z", "M -30 -6 Q -42 -10 -48 -2 Q -42 0 -38 4 Z"]
     g = [p(face, SKIN, 1.6)]
-    g.append(f'<path d="M 4 102 Q 18 112 30 109 Q 20 106 10 98 Z" fill="{SKIN_SH}"/>')
+    g.append(f'<path d="M 6 103 L 29 110 Q 20 105 10 98 Z" fill="{SKIN_SH}"/>')
     # eye
     g.append(f'<clipPath id="sideEye"><path d="M 22 62 Q 28 59.5 32.5 63 L 31.5 71 Q 27 73 23.5 71.5 Z"/></clipPath>')
     g.append(p("M 22 62 Q 28 59.5 32.5 63 L 31.5 71 Q 27 73 23.5 71.5 Z", "#fff", 0.7, LINE_SOFT))
     g.append('<g clip-path="url(#sideEye)"><ellipse cx="29.5" cy="67" rx="3.4" ry="6.8" fill="url(#iris)"/>'
              '<circle cx="28.5" cy="64.5" r="1.3" fill="#fff"/></g>')
     g.append(ln("M 21.5 62 Q 28 59 33 63", 2.4, "#29211f"))
-    g.append(ln("M 21.5 62 L 18.5 64.5", 1.5, "#29211f"))
     g.append(ln("M 24 72 Q 28 73 31 71", 0.9, LINE, 0.6))
     g.append(ln("M 22 57.5 Q 28 55 32 58", 0.9, LINE, 0.5))
     g.append(ln("M 33 91 L 35.5 91", 1.1))
-    g.append(f'<ellipse cx="24" cy="84" rx="6" ry="3" fill="{BLUSH}" opacity="0.22"/>')
-    brow = ln("M 21 50 Q 28 47.5 34 50", 1.7, "#2a2326")
+    brow = ln("M 21 53 Q 28 51 34 53", 2.6, "#2a2326")
     g.append(brow)
     for d in tufts:
         g.append(p(d, HAIR, 1.3, HAIR_LINE))
     g.append(p(hair, HAIR, 1.5, HAIR_LINE))
-    for d in ("M 8 -12 Q 30 6 38 54", "M 0 -12 Q 20 12 24 54", "M -10 -8 Q 8 20 10 86",
-              "M -20 -4 Q -18 40 -24 98", "M -32 10 Q -36 50 -36 94"):
+    for d in ("M 8 -12 Q 30 6 38 54", "M 0 -12 Q 20 12 24 54", "M -10 -8 Q 8 20 10 76",
+              "M -20 -4 Q -18 40 -24 90", "M -32 10 Q -36 50 -36 86"):
         g.append(ln(d, 0.9, "#4e4c57", 0.9))
     for d in ("M -26 2 Q -10 -10 10 -10", "M 18 -6 Q 30 2 36 14"):
         g.append(ln(d, 2.4, HAIR_HI, 0.75))
@@ -281,7 +278,7 @@ def head_side():
     g.append(p("M 0 58 C -8 56 -10 70 -6 78 C -2 84 4 82 6 76 C 8 68 6 60 0 58 Z", SKIN, 1.3))
     g.append(ln("M -1 63 Q -5 70 -2 76 Q 2 74 2 70", 0.9, LINE, 0.6))
     # sideburn lock in front of ear
-    g.append(p("M 12 60 Q 10 76 9 92 Q 5 78 4 60 Z", HAIR, 1.2, HAIR_LINE))
+    g.append(p("M 12 60 Q 11 70 10 80 Q 6 72 4 60 Z", HAIR, 1.2, HAIR_LINE))
     g.append(f'<g opacity="0.4">{brow}</g>')
     return "".join(g)
 
@@ -289,8 +286,8 @@ def head_side():
 # ================================================================ HEAD (back)
 def head_back():
     hair = ("M -54 62 C -60 6 -38 -21 0 -21 C 38 -21 60 6 54 62 C 52 82 46 96 38 104 "
-            "L 33 92 L 27 106 L 19 96 L 10 111 L 2 99 L -6 110 L -14 96 L -22 106 "
-            "L -30 92 L -38 101 C -46 96 -52 82 -54 62 Z")
+            "L 33 88 L 27 98 L 19 90 L 10 102 L 2 92 L -6 101 L -14 90 L -22 98 "
+            "L -30 88 L -38 101 C -46 96 -52 82 -54 62 Z")
     g = []
     for sx in (1, -1):
         g.append(f'<g transform="scale({sx},1)">'
@@ -351,7 +348,7 @@ def legs_front(back=False):
 def torso_front():
     g = []
     # neck
-    g.append(p("M -11 98 L -12 140 L 12 140 L 11 98 Z", SKIN, 1.4))
+    g.append(p("M -14 96 L -15 140 L 15 140 L 14 96 Z", SKIN, 1.4) + ln("M -1 120 Q 1 124 0 127", 0.9, LINE, 0.5))
     g.append(f'<path d="M -11 102 Q 0 118 11 102 L 11 114 Q 0 124 -11 114 Z" fill="{SKIN_SH}"/>')
     # cardigan back of collar, seen behind the neck
     g.append(p("M -22 140 Q -16 128 0 127 Q 16 128 22 140 L 14 141 Q 0 134 -14 141 Z", CARD_SH, 1.3))
@@ -401,7 +398,7 @@ def torso_front():
 
 
 def figure_front():
-    return legs_front() + torso_front() + head_front("calm")
+    return legs_front() + f'<g transform="scale(1.1,1)">{torso_front()}</g>' + head_front("calm")
 
 
 # ================================================================ BODY (side)
@@ -427,7 +424,7 @@ def figure_side():
                "C 26 860 22 856 24 852 Z", SOCK, 1.4))
     g.append(f'<path d="M -18 852 L 24 852 L 24 858 Q 4 862 -18 858 Z" fill="{SOCK_SH}"/>')
     # neck, slight forward lean
-    g.append(p("M -14 88 L -14 140 L 16 140 L 14 102 Z", SKIN, 1.4))
+    g.append(p("M -16 88 L -16 140 L 18 140 L 16 102 Z", SKIN, 1.4) + ln("M 16 114 Q 19 118 17 122", 0.9, LINE, 0.6))
     g.append(f'<path d="M -14 96 L 14 104 L 14 118 L -14 112 Z" fill="{SKIN_SH}"/>')
     # T-shirt sliver at chest
     g.append(p("M 6 132 C 26 150 32 220 28 300 C 26 380 26 420 28 446 L 10 446 Z", SHIRT, 1.4))
@@ -460,8 +457,8 @@ def figure_side():
 
 # ================================================================ BODY (back)
 def figure_back():
-    g = [legs_front(back=True)]
-    g.append(p("M -11 92 L -12 140 L 12 140 L 11 92 Z", SKIN, 1.4))
+    g = [legs_front(back=True), '<g transform="scale(1.1,1)">']
+    g.append(p("M -14 90 L -15 140 L 15 140 L 14 90 Z", SKIN, 1.4))
     # cardigan back (one piece)
     for sx in (1, -1):
         g.append(f'<g transform="scale({sx},1)">'
@@ -485,13 +482,14 @@ def figure_back():
                  + p("M -91 456 L -65 457 L -66 480 L -89 480 Z", CARD, 1.3)
                  + "".join(ln(f"M {x} 458 L {x} 479", 0.6, CARD_LINE, 0.55) for x in range(-87, -66, 4))
                  + "</g>")
+    g.append('</g>')
     g.append(head_back())
     return "".join(g)
 
 
 # ================================================================ EXPRESSION BUSTS
 def bust_shoulders():
-    g = [p("M -11 98 L -12 150 L 12 150 L 11 98 Z", SKIN, 1.4),
+    g = [p("M -14 96 L -15 150 L 15 150 L 14 96 Z", SKIN, 1.4) + ln("M -1 120 Q 1 124 0 127", 0.9, LINE, 0.5),
          f'<path d="M -11 102 Q 0 118 11 102 L 11 114 Q 0 124 -11 114 Z" fill="{SKIN_SH}"/>',
          p("M -22 140 Q -16 128 0 127 Q 16 128 22 140 L 14 141 Q 0 134 -14 141 Z", CARD_SH, 1.3),
          p("M -30 136 Q -16 132 -12 134 Q 0 148 12 134 Q 16 132 30 136 L 32 300 L -32 300 Z", SHIRT, 1.5),
@@ -525,7 +523,7 @@ def worried_hand():
 def bust(expr):
     tilt = {"calm": 0, "up": -7, "worried": 2, "wince": -3, "sad": 5, "smile": 4}[expr]
     head = head_front(expr)
-    g = bust_shoulders() + f'<g transform="rotate({tilt} 0 108)">{head}</g>'
+    g = f'<g transform="scale(1.1,1)">{bust_shoulders()}</g>' + f'<g transform="rotate({tilt} 0 108)">{head}</g>'
     if expr == "worried":
         g += worried_hand()
     return g
